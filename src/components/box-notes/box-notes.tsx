@@ -82,50 +82,56 @@ function BoxNotes() {
             ))}
           </select>
         </div>
-        <select
-          name='kind'
-          id='kind'
-          defaultValue='major'
-          onChange={(e) => changeKindOfKey(e.target.value)}
-        >
-          <option value='major'>Major</option>
-          <option value='minor'>Minor</option>
-        </select>
-        {chords.type === 'minor' && (
+        <div className='outer-select'>
           <select
-            name='minorType'
-            id='minorType'
-            defaultValue='natural'
-            onChange={(e) =>
-              setTypeMinorKey(
-                e.target.value as 'natural' | 'harmonic' | 'melodic',
-              )
-            }
+            className='test-select'
+            name='kind'
+            id='kind'
+            defaultValue='major'
+            onChange={(e) => changeKindOfKey(e.target.value)}
           >
-            <option value='natural'>Natural</option>
-            <option value='harmonic'>Harmonic</option>
-            <option value='melodic'>Melodic</option>
+            <option value='major'>Major</option>
+            <option value='minor'>Minor</option>
           </select>
+        </div>
+        {chords.type === 'minor' && (
+          <div className='outer-select'>
+            <select
+              className='test-select'
+              name='minorType'
+              id='minorType'
+              defaultValue='natural'
+              onChange={(e) =>
+                setTypeMinorKey(
+                  e.target.value as 'natural' | 'harmonic' | 'melodic',
+                )
+              }
+            >
+              <option value='natural'>Natural</option>
+              <option value='harmonic'>Harmonic</option>
+              <option value='melodic'>Melodic</option>
+            </select>
+          </div>
         )}
       </div>
       <div className='chords'>
         {chords.type === 'major'
           ? chords.grades.map((grade, index) => (
-              <ColumnChord
-                key={index}
-                grade={grade}
-                chord={chords.chords[index]}
-                notes={getNotesOfChord(chords.chords[index])}
-              />
-            ))
+            <ColumnChord
+              key={index}
+              grade={grade}
+              chord={chords.chords[index]}
+              notes={getNotesOfChord(chords.chords[index])}
+            />
+          ))
           : chords[typeMinorKey].grades.map((grade, index) => (
-              <ColumnChord
-                key={index}
-                grade={grade}
-                chord={chords[typeMinorKey].chords[index]}
-                notes={getNotesOfChord(chords[typeMinorKey].chords[index])}
-              />
-            ))}
+            <ColumnChord
+              key={index}
+              grade={grade}
+              chord={chords[typeMinorKey].chords[index]}
+              notes={getNotesOfChord(chords[typeMinorKey].chords[index])}
+            />
+          ))}
       </div>
     </>
   )
