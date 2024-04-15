@@ -68,17 +68,20 @@ function BoxNotes() {
   return (
     <>
       <div className='center'>
-        <select
-          name='note'
-          id='note'
-          onChange={(e) => changeNote(e.target.value)}
-        >
-          {availableNotes.map((note) => (
-            <option value={note} key={note}>
-              {note}
-            </option>
-          ))}
-        </select>
+        <div className='outer-select'>
+          <select
+            className='test-select'
+            name='note'
+            id='note'
+            onChange={(e) => changeNote(e.target.value)}
+          >
+            {availableNotes.map((note) => (
+              <option value={note} key={note}>
+                {note}
+              </option>
+            ))}
+          </select>
+        </div>
         <select
           name='kind'
           id='kind'
