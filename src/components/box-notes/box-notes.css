@@ -1,0 +1,19 @@
+select[name='note'] {
+  font-size: 35px;
+}
+
+select:not([name='note']) {
+  font-size: 20px;
+}
+
+select {
+  margin: 0 1rem;
+  padding: 0 0.5rem;
+}
+
+.chords {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 2rem;
+}
