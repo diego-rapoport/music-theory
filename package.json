@@ -12,6 +12,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "smplr": "^0.13.4",
     "tonal": "^6.0.1",
     "zustand": "^4.5.2"
   },

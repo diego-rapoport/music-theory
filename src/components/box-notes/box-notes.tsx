@@ -3,9 +3,23 @@ import './box-notes.css'
 import { useNoteStore } from '../../store/note'
 import { Chord, Key } from 'tonal'
 import ColumnChord from '../column-chord/column-chord'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { getSoundfontNames } from 'smplr'
+import { useSoundStore } from '../../store/sound'
 
 function BoxNotes() {
+  const soundFonts = getSoundfontNames()
+  const { loadInstrument, instrument, loaded, changeInstrument } =
+    useSoundStore()
+
+  useEffect(() => {
+    loadInstrument(instrument)
+  }, [])
+
+  async function clickLoadInstrument(newInstrument: string): Promise<void> {
+    changeInstrument(newInstrument)
+  }
+
   const availableNotes = [
     'C',
     'C#',
@@ -67,71 +81,86 @@ function BoxNotes() {
 
   return (
     <>
-      <div className='center'>
-        <div className='outer-select'>
+      <div className='outer-box'>
+        <div className='outer-note'>
+          <div className='outer-select'>
+            <select
+              className='custom-select'
+              name='note'
+              id='note'
+              onChange={(e) => changeNote(e.target.value)}
+            >
+              {availableNotes.map((note) => (
+                <option value={note} key={note}>
+                  {note}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className='outer-select'>
+            <select
+              className='custom-select'
+              name='kind'
+              id='kind'
+              defaultValue='major'
+              onChange={(e) => changeKindOfKey(e.target.value)}
+            >
+              <option value='major'>Major</option>
+              <option value='minor'>Minor</option>
+            </select>
+          </div>
+          {chords.type === 'minor' && (
+            <div className='outer-select'>
+              <select
+                className='custom-select'
+                name='minorType'
+                id='minorType'
+                defaultValue='natural'
+                onChange={(e) =>
+                  setTypeMinorKey(
+                    e.target.value as 'natural' | 'harmonic' | 'melodic',
+                  )
+                }
+              >
+                <option value='natural'>Natural</option>
+                <option value='harmonic'>Harmonic</option>
+                <option value='melodic'>Melodic</option>
+              </select>
+            </div>
+          )}
+        </div>
+        <div className='outer-select select-max-w'>
           <select
-            className='test-select'
-            name='note'
-            id='note'
-            onChange={(e) => changeNote(e.target.value)}
+            className='custom-select'
+            defaultValue={instrument}
+            onChange={(e) => clickLoadInstrument(e.target.value)}
           >
-            {availableNotes.map((note) => (
-              <option value={note} key={note}>
-                {note}
+            {soundFonts.map((soundFont) => (
+              <option value={soundFont} key={soundFont}>
+                {soundFont}
               </option>
             ))}
           </select>
         </div>
-        <div className='outer-select'>
-          <select
-            className='test-select'
-            name='kind'
-            id='kind'
-            defaultValue='major'
-            onChange={(e) => changeKindOfKey(e.target.value)}
-          >
-            <option value='major'>Major</option>
-            <option value='minor'>Minor</option>
-          </select>
-        </div>
-        {chords.type === 'minor' && (
-          <div className='outer-select'>
-            <select
-              className='test-select'
-              name='minorType'
-              id='minorType'
-              defaultValue='natural'
-              onChange={(e) =>
-                setTypeMinorKey(
-                  e.target.value as 'natural' | 'harmonic' | 'melodic',
-                )
-              }
-            >
-              <option value='natural'>Natural</option>
-              <option value='harmonic'>Harmonic</option>
-              <option value='melodic'>Melodic</option>
-            </select>
-          </div>
-        )}
       </div>
       <div className='chords'>
         {chords.type === 'major'
           ? chords.grades.map((grade, index) => (
-            <ColumnChord
-              key={index}
-              grade={grade}
-              chord={chords.chords[index]}
-              notes={getNotesOfChord(chords.chords[index])}
-            />
-          ))
+              <ColumnChord
+                key={index}
+                grade={grade}
+                chord={chords.chords[index]}
+                notes={getNotesOfChord(chords.chords[index])}
+              />
+            ))
           : chords[typeMinorKey].grades.map((grade, index) => (
-            <ColumnChord
-              key={index}
-              grade={grade}
-              chord={chords[typeMinorKey].chords[index]}
-              notes={getNotesOfChord(chords[typeMinorKey].chords[index])}
-            />
-          ))}
+              <ColumnChord
+                key={index}
+                grade={grade}
+                chord={chords[typeMinorKey].chords[index]}
+                notes={getNotesOfChord(chords[typeMinorKey].chords[index])}
+              />
+            ))}
       </div>
     </>
   )
