@@ -9,14 +9,14 @@ import { useSoundStore } from '../../store/sound'
 
 function BoxNotes() {
   const soundFonts = getSoundfontNames()
-  const { loadInstrument, instrument, loaded, changeInstrument } =
+  const { loadInstrument, instrument, loaded, changeInstrument, playableInstrument } =
     useSoundStore()
 
   useEffect(() => {
     loadInstrument(instrument)
   }, [])
 
-  async function clickLoadInstrument(newInstrument: string): Promise<void> {
+  async function selectNewInstrument(newInstrument: string): Promise<void> {
     changeInstrument(newInstrument)
   }
 
@@ -58,14 +58,16 @@ function BoxNotes() {
 
   function callTypeOfScale(note: string, kind: string) {
     switch (kind) {
-      case 'major':
+      case 'major': {
         const newMajorChords = getChordsFromMajorScale(note)
         setChords(newMajorChords)
         break
-      case 'minor':
+      }
+      case 'minor': {
         const newMinorChords = getChordsFromMinorScale(note)
         setChords(newMinorChords)
         break
+      }
     }
     setKindOfKey(kind)
   }
@@ -133,7 +135,7 @@ function BoxNotes() {
           <select
             className='custom-select'
             defaultValue={instrument}
-            onChange={(e) => clickLoadInstrument(e.target.value)}
+            onChange={(e) => selectNewInstrument(e.target.value)}
           >
             {soundFonts.map((soundFont) => (
               <option value={soundFont} key={soundFont}>
@@ -146,21 +148,21 @@ function BoxNotes() {
       <div className='chords'>
         {chords.type === 'major'
           ? chords.grades.map((grade, index) => (
-              <ColumnChord
-                key={index}
-                grade={grade}
-                chord={chords.chords[index]}
-                notes={getNotesOfChord(chords.chords[index])}
-              />
-            ))
+            <ColumnChord
+              key={index}
+              grade={grade}
+              chord={chords.chords[index]}
+              notes={getNotesOfChord(chords.chords[index])}
+            />
+          ))
           : chords[typeMinorKey].grades.map((grade, index) => (
-              <ColumnChord
-                key={index}
-                grade={grade}
-                chord={chords[typeMinorKey].chords[index]}
-                notes={getNotesOfChord(chords[typeMinorKey].chords[index])}
-              />
-            ))}
+            <ColumnChord
+              key={index}
+              grade={grade}
+              chord={chords[typeMinorKey].chords[index]}
+              notes={getNotesOfChord(chords[typeMinorKey].chords[index])}
+            />
+          ))}
       </div>
     </>
   )

@@ -5,12 +5,14 @@ type SoundStoreType = {
   globalContext: AudioContext
   loaded: boolean
   instrument: string
+  playableInstrument: Soundfont | null
   changeInstrument: (newInstrument: string) => void
   loadInstrument: (instrumentName: string) => Promise<void>
 }
 
 export const useSoundStore = create<SoundStoreType>()((set) => ({
   globalContext: new AudioContext(),
+  playableInstrument: null,
   loaded: false,
   instrument: 'acoustic_grand_piano',
   changeInstrument: (newInstrument) => {
@@ -24,15 +26,10 @@ export const useSoundStore = create<SoundStoreType>()((set) => ({
   loadInstrument: async (instrumentName) => {
     set(() => ({ loaded: false }))
     const context = useSoundStore.getState().globalContext
-    const instrument = new Soundfont(context, {
+    const instrument = await new Soundfont(context, {
       instrument: instrumentName,
-    })
-    instrument.load
-      .then(() => {
-        set(() => ({ loaded: true }))
-      })
-      .catch((e) => {
-        console.log('Error load instrument = ', e)
-      })
+    }).load
+    set(() => ({playableInstrument: instrument, loaded: true}))
+
   },
 }))

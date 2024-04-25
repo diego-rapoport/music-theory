@@ -1,3 +1,5 @@
+import { useSoundStore } from '../../store/sound'
+import { SolarPlaybackSpeedBold } from '../icons/SolarPlaybackSpeedBold'
 import './column-chord.css'
 
 type ColumnProps = {
@@ -9,9 +11,19 @@ type ColumnProps = {
 }
 
 function ColumnChord({ grade, chord, notes }: ColumnProps) {
+
+  const { playableInstrument } = useSoundStore()
+
+  function playChord() {
+    notes.forEach(note => {
+      playableInstrument?.start({ note: `${note}4` })
+    })
+  }
+
   return (
     <>
       <div className='column'>
+        <SolarPlaybackSpeedBold onClick={playChord}></SolarPlaybackSpeedBold>
         <h3>
           {grade}({chord})
         </h3>
